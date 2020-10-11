@@ -35,10 +35,16 @@
 .top-wrap{
   display: flex;
   justify-content: space-between;
+  align-items: flex-start;
 }
 
 .button-wrap{
   display: flex;
   width: 150px;
   justify-content: space-evenly;
+}
+
+.entry-image{
+  width: 150px;
+  height: 150px;
 }

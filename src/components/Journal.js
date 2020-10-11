@@ -4,6 +4,7 @@ import localForage from "localforage";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import _isEmpty from "lodash/isEmpty";
 import ImageUploader from 'react-images-upload';
+import SearchField from "react-search-field";
 import ListJournal from "../components/ListJournals";
 import ReactChipInput from "react-chip-input";
 
@@ -15,13 +16,22 @@ function Journal(props) {
   const [dataList, setDataList] = useState([]);
   const [tags, setTags] = useState([]);
   const [selectedIndex, setSelectedIndex] = useState("");
+  const [searchTerm, setSearchTerm] = useState("");
+  const [searchResult, setSearchResult] = useState([]);
   const toggle = () => setModal(!modal);
 
   useEffect(() => {
-    localForage.getItem("data", (_error, data) => {
-      setDataList(data)
-    })
-  }, [dataList])
+    if (searchTerm) {
+      if(!_isEmpty(searchResult)){
+        setDataList(searchResult)
+      }
+    }
+    else {
+      localForage.getItem("data", (_error, data) => {
+        setDataList(data)
+      })
+    }
+  }, [dataList, searchResult, searchTerm])
   const handleTitleChange = (e) => {
     setTitle(e.target.value)
   }
@@ -30,22 +40,24 @@ function Journal(props) {
     setText(e.target.value)
   }
 
-  const onDrop = (picture) => {
-    setImage(picture);
+  const onDrop = (event) => {
+    const reader = new FileReader();
+    const file = event.target.files[0];
+    reader.onloadend = () => {
+      setImage(reader.result);
+    }
+    if (file) {
+      reader.readAsDataURL(file);
+    }
   }
   const handleSave = (index) => {
     const newEntry = { title: title, tags: tags, text: text, imageUrl: image }
-    console.log("newEntry", newEntry)
-
     setModal(!modal);
     localForage.getItem("data", (_error, data) => {
       if (data) {
         const updatedDataArray = data;
-        console.log("selectedIndex", selectedIndex)
-
         if (selectedIndex !== "") {
           updatedDataArray.splice(selectedIndex, 1, newEntry)
-          console.log("updatedDataArray==", updatedDataArray)
         } else {
           updatedDataArray.push(newEntry);
         }
@@ -68,7 +80,6 @@ function Journal(props) {
     const chips = tags.slice();
     chips.push(value);
     setTags(chips);
-    console.log(value)
   }
 
   const handleRemoveTag = (index) => {
@@ -87,18 +98,34 @@ function Journal(props) {
 
   const handleEdit = (index) => {
     const selectedEntry = dataList[index];
-    const { title, text, tags } = selectedEntry;
+    const { title, text, tags, imageUrl } = selectedEntry;
     setModal(true);
     setTitle(title);
     setText(text);
     setTags(tags);
+    setImage(imageUrl);
     setSelectedIndex(index);
   }
+
+  const handleSearch = (value, event) => {
+    setSearchTerm(value)
+    const searchResult = dataList.filter((data) => data.tags.some((tag) => tag === value))
+    setSearchResult([...searchResult])
+  }
+
   return (
     <div>
       <div className="img-wrap">
         <img style={{ height: "200px", width: "450px" }} src="https://momonthegoinholytoledo.files.wordpress.com/2016/11/dear-diary.png" alt="logo" />
         <Button color="danger" onClick={toggle}>ADD</Button>
+        <Label>Search</Label>
+        <SearchField
+          placeholder="Search by tag name..."
+          onChange={handleSearch}
+          searchText={searchTerm}
+          onEnter={handleSearch}
+          classNames="test-class"
+        />
       </div>
       <Modal scrollable isOpen={modal} toggle={toggle} className="modal-lg">
         <ModalHeader toggle={toggle}>Add New Entry</ModalHeader>
@@ -115,14 +142,15 @@ function Journal(props) {
           <Label>Title</Label>
           <Input type="textarea" name="text" value={text} onChange={handleTextChange} />
           <Label>Add Image</Label>
-          <ImageUploader
+          {/* <ImageUploader
             withIcon={true}
             buttonText='Choose images'
             onChange={onDrop}
             imgExtension={['.jpg', '.gif', '.png', '.gif']}
             maxFileSize={5242880}
             withPreview={true}
-          />
+          /> */}
+          <input type="file" accept="image/*" onChange={onDrop} />
         </ModalBody>
         <ModalFooter>
           <Button color="primary" onClick={handleSave}>Save</Button>{' '}
