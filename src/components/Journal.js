@@ -1,18 +1,18 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Input, Label, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
+import { Button } from 'reactstrap';
 import localForage from "localforage";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import _isEmpty from "lodash/isEmpty";
-import Tooltip from '@material-ui/core/Tooltip';
 import SearchField from "react-search-field";
 import ListJournal from "../components/ListJournals";
-import ReactChipInput from "react-chip-input";
+import ModalComponent from "../components/Modal";
 
 function Journal() {
   const [modal, setModal] = useState(false);
   const [title, setTitle] = useState("");
   const [text, setText] = useState("");
   const [image, setImage] = useState([]);
+  const [date, setDate] = useState(new Date().toDateString());
   const [dataList, setDataList] = useState([]);
   const [tags, setTags] = useState([]);
   const [selectedIndex, setSelectedIndex] = useState("");
@@ -33,11 +33,11 @@ function Journal() {
     }
   }, [dataList, searchResult, searchTerm])
   const handleTitleChange = (e) => {
-    setTitle(e.target.value)
+    setTitle(e.target.value);
   }
 
   const handleTextChange = (e) => {
-    setText(e.target.value)
+    setText(e.target.value);
   }
 
   const onDrop = (event) => {
@@ -51,7 +51,7 @@ function Journal() {
     }
   }
   const handleSave = (index) => {
-    const newEntry = { title: title, tags: tags, text: text, imageUrl: image }
+    const newEntry = { title: title, tags: tags, text: text, imageUrl: image, date: date }
     setModal(!modal);
     localForage.getItem("data", (_error, data) => {
       if (data) {
@@ -98,10 +98,11 @@ function Journal() {
 
   const handleEdit = (index) => {
     const selectedEntry = dataList[index];
-    const { title, text, tags, imageUrl } = selectedEntry;
+    const { title, text, tags, imageUrl,date } = selectedEntry;
     setModal(true);
     setTitle(title);
     setText(text);
+    setDate(date);
     setTags(tags);
     setImage(imageUrl);
     setSelectedIndex(index);
@@ -116,56 +117,35 @@ function Journal() {
   return (
     <div>
       <div className="img-wrap">
-        <img className="logo-image" src="https://www.gideonspromise.org/wp-content/uploads/2019/05/DailyJournal-logo-300x138.jpg" alt="logo" />
+        <img className="logo-image" src="https://www.whoneedsnewspapers.org/images/ms/msnems_masthead.png" alt="logo" />
       </div>
-      <Modal scrollable isOpen={modal} toggle={toggle} className="modal-lg">
-        <ModalHeader toggle={toggle}>Add New Entry</ModalHeader>
-        <ModalBody>
-          <Label>Title</Label>
-          <Input type="text" name="title" value={title} onChange={handleTitleChange} />
-          <Label>Tag</Label>
-          <ReactChipInput
-            classes="class1 class2"
-            chips={tags}
-            onSubmit={value => handleTag(value)}
-            onRemove={index => handleRemoveTag(index)}
-          />
-          <Label>Title</Label>
-          <Input type="textarea" name="text" value={text} onChange={handleTextChange} />
-          <Label>Add Image</Label>
-          <br />
-          <input type="file" accept="image/*" onChange={onDrop} />
-        </ModalBody>
-        <ModalFooter>
-          <Button color="primary" onClick={handleSave}>Save</Button>{' '}
-          <Button color="secondary" onClick={toggle}>Cancel</Button>
-        </ModalFooter>
-      </Modal>
+      <ModalComponent modal={modal} title={title} date={date} text={text} toggle={toggle} image={image} tags={tags} handleTextChange={handleTextChange}
+        handleTitleChange={handleTitleChange} handleTag={handleTag} handleRemoveTag={handleRemoveTag} onDrop={onDrop} handleSave={handleSave} />
       {!_isEmpty(dataList) ? (
         <div className="list-content-wrap">
           <div className="header-wrap">
-            <Tooltip className="tooltip" title="Add">
-              <i className="fa fa-plus-circle fa-3x" onClick={toggle} aria-hidden="true"></i>
-            </Tooltip>
+            <i className="fa fa-plus-circle fa-3x" title="Add" onClick={toggle} aria-hidden="true"></i>
             <SearchField
               placeholder="Search by tag name..."
               onChange={handleSearch}
               searchText={searchTerm}
               onEnter={handleSearch}
+              onSearchClick={handleSearch}
               classNames="test-class"
             />
           </div>
           <div className="list-outer-wrap">
             {dataList.map((data, index) => {
               return (
-                <ListJournal key={index} data={data} index={index} handleDelete={handleDelete} handleEdit={handleEdit} />
+                <ListJournal key={index} data={data} date={date} index={index} handleDelete={handleDelete} handleEdit={handleEdit} />
               )
             })}
           </div>
         </div>
-      ) : <div className="add-text-wrap"><p className="add-text">Add your first entry...</p>
+      ) : (
+        <div className="add-text-wrap"><p className="add-text">Add your first entry...</p>
           <Button className="add-button" color="danger" onClick={toggle}>ADD</Button>
-        </div>
+        </div>)
       }
     </div >
   )

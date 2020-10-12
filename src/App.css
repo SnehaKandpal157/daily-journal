@@ -10,6 +10,12 @@
   font-size: 24px;
 }
 
+.date{
+  color: #727070;
+  font-weight: 500;
+  font-size: 18px;
+}
+
 .img-wrap{
   display: flex;
   flex-direction: column;
@@ -29,9 +35,15 @@
   padding: 15px;
   border-radius: 20px;
   border: 1px solid #eae7e7;
+  box-shadow: 3px 3px lightgrey;
 }
 .tags-wrap{
   display: flex
+}
+
+.fa-pencil:before {
+  content: "\f040";
+  color: #4b41ee;
 }
 
 .top-wrap{
@@ -49,6 +61,7 @@
 .entry-image{
   width: 150px;
   height: 150px;
+  margin-right: 15px;
 }
 
 .add-button{
@@ -69,6 +82,7 @@
   width: 50%;
   display: flex;
   justify-content: space-between;
+  align-items: center;
 }
 
 .list-outer-wrap{
@@ -82,7 +96,7 @@
 
 .fa-trash-o:before {
   content: "\f014";
-  color: darkolivegreen;
+  color: tomato;
 }
 
 .fa{
@@ -91,11 +105,12 @@
 }
 
 .tag{
-  padding: 0 10px;
+  padding: 2px 10px;
   border: 1px solid lightgray;
   border-radius: 20px;
   color: darkgray;
   margin-right: 10px;
+  list-style: none;
 }
 
 span.short-text {
@@ -109,8 +124,13 @@ span.short-text {
 }
 
 .logo-image{
-  height: 180px;
+  height: 150px;
   width: 450px;
+}
+
+.date-display{
+  color: #4c4cbe;
+  font-weight: 500;
 }
 
 @media only screen and (max-width:767px){
