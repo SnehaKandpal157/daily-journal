@@ -4,6 +4,7 @@ import localForage from "localforage";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import _isEmpty from "lodash/isEmpty";
 import SearchField from "react-search-field";
+import DatePicker from 'react-date-picker';
 import ListJournal from "../components/ListJournals";
 import ModalComponent from "../components/Modal";
 
@@ -18,10 +19,17 @@ function Journal() {
   const [selectedIndex, setSelectedIndex] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
   const [searchResult, setSearchResult] = useState([]);
+  const [selectedDate, setSelectedDate] = useState("");
+
   const toggle = () => setModal(!modal);
 
   useEffect(() => {
-    if (searchTerm) {
+    if (searchTerm ) {
+      if (!_isEmpty(searchResult)) {
+        setDataList(searchResult)
+      }
+    }
+    else if(selectedDate){
       if (!_isEmpty(searchResult)) {
         setDataList(searchResult)
       }
@@ -31,7 +39,7 @@ function Journal() {
         setDataList(data)
       })
     }
-  }, [dataList, searchResult, searchTerm])
+  }, [dataList, searchResult, searchTerm, selectedDate])
   const handleTitleChange = (e) => {
     setTitle(e.target.value);
   }
@@ -98,7 +106,7 @@ function Journal() {
 
   const handleEdit = (index) => {
     const selectedEntry = dataList[index];
-    const { title, text, tags, imageUrl,date } = selectedEntry;
+    const { title, text, tags, imageUrl, date } = selectedEntry;
     setModal(true);
     setTitle(title);
     setText(text);
@@ -114,6 +122,12 @@ function Journal() {
     setSearchResult([...searchResult])
   }
 
+  const onDateSelect = (selectedDate) => {
+    setSelectedDate(selectedDate)
+    const dateSearchResult = dataList.filter((data) => data.date === selectedDate.toDateString())
+    setSearchResult([...dateSearchResult])
+  }
+
   return (
     <div>
       <div className="img-wrap">
@@ -124,7 +138,15 @@ function Journal() {
       {!_isEmpty(dataList) ? (
         <div className="list-content-wrap">
           <div className="header-wrap">
-            <i className="fa fa-plus-circle fa-3x" title="Add" onClick={toggle} aria-hidden="true"></i>
+            <div className="left-wrap">
+              <i className="fa fa-plus-circle fa-2x" title="Add" onClick={toggle} aria-hidden="true"></i>
+              <DatePicker
+                onChange={onDateSelect}
+                value={selectedDate}
+                clearIcon={null}
+              />
+            </div>
+            <div className="right-wrap">
             <SearchField
               placeholder="Search by tag name..."
               onChange={handleSearch}
@@ -133,6 +155,7 @@ function Journal() {
               onSearchClick={handleSearch}
               classNames="test-class"
             />
+            </div>
           </div>
           <div className="list-outer-wrap">
             {dataList.map((data, index) => {
@@ -143,9 +166,9 @@ function Journal() {
           </div>
         </div>
       ) : (
-        <div className="add-text-wrap"><p className="add-text">Add your first entry...</p>
-          <Button className="add-button" color="danger" onClick={toggle}>ADD</Button>
-        </div>)
+          <div className="add-text-wrap"><p className="add-text">Add your first entry...</p>
+            <Button className="add-button" color="danger" onClick={toggle}>ADD</Button>
+          </div>)
       }
     </div >
   )

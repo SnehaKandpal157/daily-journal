@@ -13,6 +13,7 @@
     "react": "^16.13.1",
     "react-chip-input": "^1.0.5",
     "react-chips": "^0.8.0",
+    "react-date-picker": "^8.0.3",
     "react-dom": "^16.13.1",
     "react-images-upload": "^1.2.8",
     "react-read-more-less": "^0.1.6",

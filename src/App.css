@@ -133,6 +133,12 @@ span.short-text {
   font-weight: 500;
 }
 
+.left-wrap{
+  display: flex;
+  justify-content: space-between;
+  width: 27%;
+}
+
 @media only screen and (max-width:767px){
   .list-outer-wrap {
     width: 90%;
@@ -147,11 +153,29 @@ span.short-text {
 }
 
 .header-wrap{
-  width:80%
+  width:90%;
+  display: flex;
+  flex-direction: column;
+}
+
+.left-wrap{
+  justify-content: space-between;
+  width: 100%;
+  display: flex;
+}
+
+.right-wrap {
+  margin-top: 20px;
+  width: 100%;
 }
 
 .logo-image{
   height: 100px;
   width: 300px;
 }
+
+.react-search-field.test-class {
+  width: 100%;
 }
+}
+
