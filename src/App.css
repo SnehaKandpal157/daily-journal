@@ -1,6 +1,8 @@
 .add-text-wrap{
   display: flex;
+  flex-direction: column;
   justify-content: center;
+  align-items: center;
   margin-top: 100px;
 }
 
@@ -23,10 +25,10 @@
 }
 
 .entry-wrap{
-  width: 55%;
-  background: #f0f2f2;
+  width: 100%;
   padding: 15px;
   border-radius: 20px;
+  border: 1px solid #eae7e7;
 }
 .tags-wrap{
   display: flex
@@ -40,11 +42,96 @@
 
 .button-wrap{
   display: flex;
-  width: 150px;
+  width: 80px;
   justify-content: space-evenly;
 }
 
 .entry-image{
   width: 150px;
   height: 150px;
+}
+
+.add-button{
+  width: 300px;
+  height: 50px;
+  font-size: 20px;
+  border-radius: 10px;
+}
+
+.list-content-wrap{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.header-wrap {
+  width: 50%;
+  display: flex;
+  justify-content: space-between;
+}
+
+.list-outer-wrap{
+  width: 50%;
+}
+
+.entry-content{
+  display: flex;
+  margin-top: 10px;
+}
+
+.fa-trash-o:before {
+  content: "\f014";
+  color: darkolivegreen;
+}
+
+.fa{
+  margin-left: 10px !important;
+  cursor: pointer;
+}
+
+.tag{
+  padding: 0 10px;
+  border: 1px solid lightgray;
+  border-radius: 20px;
+  color: darkgray;
+  margin-right: 10px;
+}
+
+span.short-text {
+  font-size: 15px;
+  color: #8d8888;
+}
+
+.fa-plus-circle:before {
+  content: "\f055";
+  color: #ea1533;
+}
+
+.logo-image{
+  height: 180px;
+  width: 450px;
+}
+
+@media only screen and (max-width:767px){
+  .list-outer-wrap {
+    width: 90%;
+}
+
+.entry-content {
+  display: flex;
+  flex-direction: column;
+  margin-top: 10px;
+  justify-content: center;
+  align-items: center;
+}
+
+.header-wrap{
+  width:80%
+}
+
+.logo-image{
+  height: 150px;
+  width: 300px;
+}
 }

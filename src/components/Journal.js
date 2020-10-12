@@ -3,12 +3,12 @@ import { Button, Input, Label, Modal, ModalHeader, ModalBody, ModalFooter } from
 import localForage from "localforage";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import _isEmpty from "lodash/isEmpty";
-import ImageUploader from 'react-images-upload';
+import Tooltip from '@material-ui/core/Tooltip';
 import SearchField from "react-search-field";
 import ListJournal from "../components/ListJournals";
 import ReactChipInput from "react-chip-input";
 
-function Journal(props) {
+function Journal() {
   const [modal, setModal] = useState(false);
   const [title, setTitle] = useState("");
   const [text, setText] = useState("");
@@ -22,7 +22,7 @@ function Journal(props) {
 
   useEffect(() => {
     if (searchTerm) {
-      if(!_isEmpty(searchResult)){
+      if (!_isEmpty(searchResult)) {
         setDataList(searchResult)
       }
     }
@@ -116,16 +116,7 @@ function Journal(props) {
   return (
     <div>
       <div className="img-wrap">
-        <img style={{ height: "200px", width: "450px" }} src="https://momonthegoinholytoledo.files.wordpress.com/2016/11/dear-diary.png" alt="logo" />
-        <Button color="danger" onClick={toggle}>ADD</Button>
-        <Label>Search</Label>
-        <SearchField
-          placeholder="Search by tag name..."
-          onChange={handleSearch}
-          searchText={searchTerm}
-          onEnter={handleSearch}
-          classNames="test-class"
-        />
+        <img className="logo-image" src="https://www.gideonspromise.org/wp-content/uploads/2019/05/DailyJournal-logo-300x138.jpg" alt="logo" />
       </div>
       <Modal scrollable isOpen={modal} toggle={toggle} className="modal-lg">
         <ModalHeader toggle={toggle}>Add New Entry</ModalHeader>
@@ -142,14 +133,7 @@ function Journal(props) {
           <Label>Title</Label>
           <Input type="textarea" name="text" value={text} onChange={handleTextChange} />
           <Label>Add Image</Label>
-          {/* <ImageUploader
-            withIcon={true}
-            buttonText='Choose images'
-            onChange={onDrop}
-            imgExtension={['.jpg', '.gif', '.png', '.gif']}
-            maxFileSize={5242880}
-            withPreview={true}
-          /> */}
+          <br />
           <input type="file" accept="image/*" onChange={onDrop} />
         </ModalBody>
         <ModalFooter>
@@ -158,13 +142,32 @@ function Journal(props) {
         </ModalFooter>
       </Modal>
       {!_isEmpty(dataList) ? (
-        dataList.map((data, index) => {
-          return (
-            <ListJournal key={index} data={data} index={index} handleDelete={handleDelete} handleEdit={handleEdit} />
-          )
-        })
-      ) : <div className="add-text-wrap"><p className="add-text">Add your first entry...</p> </div>}
-    </div>
+        <div className="list-content-wrap">
+          <div className="header-wrap">
+            <Tooltip className="tooltip" title="Add">
+              <i className="fa fa-plus-circle fa-3x" onClick={toggle} aria-hidden="true"></i>
+            </Tooltip>
+            <SearchField
+              placeholder="Search by tag name..."
+              onChange={handleSearch}
+              searchText={searchTerm}
+              onEnter={handleSearch}
+              classNames="test-class"
+            />
+          </div>
+          <div className="list-outer-wrap">
+            {dataList.map((data, index) => {
+              return (
+                <ListJournal key={index} data={data} index={index} handleDelete={handleDelete} handleEdit={handleEdit} />
+              )
+            })}
+          </div>
+        </div>
+      ) : <div className="add-text-wrap"><p className="add-text">Add your first entry...</p>
+          <Button className="add-button" color="danger" onClick={toggle}>ADD</Button>
+        </div>
+      }
+    </div >
   )
 }
 
