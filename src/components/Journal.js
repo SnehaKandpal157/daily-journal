@@ -64,7 +64,7 @@ function Journal() {
       reader.readAsDataURL(file);
     }
   }
-  const handleSave = (index) => {
+  const handleSave = () => {
     const newEntry = { title: title, tags: tags, text: text, imageUrl: image, date: date }
     setModal(!modal);
     localForage.getItem("data", (_error, data) => {
