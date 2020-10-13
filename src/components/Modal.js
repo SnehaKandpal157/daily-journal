@@ -18,7 +18,7 @@ function ModalComponent(props) {
             onSubmit={value => props.handleTag(value)}
             onRemove={index => props.handleRemoveTag(index)}
           />
-          <Label>Title</Label>
+          <Label>Text</Label>
           <Input type="textarea" name="text" value={props.text} onChange={props.handleTextChange} />
           <Label>Add Image</Label>
           <br />
