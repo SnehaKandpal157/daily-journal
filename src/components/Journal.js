@@ -21,7 +21,13 @@ function Journal() {
   const [searchResult, setSearchResult] = useState([]);
   const [selectedDate, setSelectedDate] = useState("");
 
-  const toggle = () => setModal(!modal);
+  const toggle = () => {
+    setModal(!modal);
+    setTitle("");
+    setText("");
+    setTags([]);
+    setImage([]);
+  }
 
   useEffect(() => {
     if (searchTerm ) {
